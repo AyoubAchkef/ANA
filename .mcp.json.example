@@ -1,0 +1,69 @@
+{
+  "mcpServers": {
+    "jira": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@aashari/mcp-server-atlassian-jira"],
+      "env": {
+        "ATLASSIAN_SITE_NAME": "your-site-name",
+        "ATLASSIAN_USER_EMAIL": "your-email@example.com",
+        "ATLASSIAN_API_TOKEN": "your-atlassian-api-token"
+      }
+    },
+    "github": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-github-personal-access-token"
+      }
+    },
+    "postgres": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-postgres", "postgresql://username:password@host:port/database"]
+    },
+    "aws": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "C:\\Users\\ayoub\\.local\\bin\\uvx.exe", "awslabs.aws-documentation-mcp-server"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "your-aws-access-key-id",
+        "AWS_SECRET_ACCESS_KEY": "your-aws-secret-access-key",
+        "AWS_REGION": "your-region",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "figma": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_API_KEY": "your-figma-api-key"
+      }
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-memory"]
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "gsap": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "bruzethegreat-gsap-master-mcp-server@latest"]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": ["/c", "npx", "@playwright/mcp@latest"]
+    }
+  },
+  "registries": {
+    "@react-bits": "https://reactbits.dev/r/{name}.json"
+  }
+}
