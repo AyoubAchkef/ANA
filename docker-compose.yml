@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  ana-app:
+    container_name: ana-platform
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    # Optional: Add volume for development
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    #   - /app/.next

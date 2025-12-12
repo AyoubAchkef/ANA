@@ -33,6 +33,7 @@ export interface ShuffleProps {
   triggerOnce?: boolean
   respectReducedMotion?: boolean
   triggerOnHover?: boolean
+  onCharsReady?: (chars: HTMLElement[]) => void
 }
 
 const Shuffle: React.FC<ShuffleProps> = ({
@@ -58,7 +59,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
   colorTo,
   triggerOnce = true,
   respectReducedMotion = true,
-  triggerOnHover = true
+  triggerOnHover = true,
+  onCharsReady
 }) => {
   const ref = useRef<HTMLElement>(null)
   const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -195,6 +197,11 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
           wrappersRef.current.push(wrap)
         })
+
+        // Notify parent component that chars are ready for external animations
+        if (onCharsReady && chars.length > 0) {
+          onCharsReady(chars)
+        }
       }
 
       const inners = () => wrappersRef.current.map(w => w.firstElementChild as HTMLElement)
@@ -346,7 +353,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
         triggerOnce,
         respectReducedMotion,
         triggerOnHover,
-        onShuffleComplete
+        onShuffleComplete,
+        onCharsReady
       ],
       scope: ref
     }

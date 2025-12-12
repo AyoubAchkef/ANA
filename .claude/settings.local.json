@@ -33,7 +33,8 @@
       "Bash(cmd /c \"taskkill /F /IM node.exe /T 2>nul & echo Killed all Node processes\")",
       "Bash(cmd /c \"rmdir /s /q .next 2>nul && timeout /t 2 /nobreak >nul && npm run dev -- -p 3001\")",
       "Bash(cmd /c \"taskkill /F /IM node.exe /T 2>nul && echo All Node processes killed\")",
-      "Bash(cmd /c \"rmdir /s /q .next 2>nul && rmdir /s /q node_modules\\.cache 2>nul && echo Caches cleared\")"
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && rmdir /s /q node_modules\\.cache 2>nul && echo Caches cleared\")",
+      "Bash(xargs cat:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
