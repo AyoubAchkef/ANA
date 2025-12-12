@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where:*)",
+      "Bash(cmd /c \"dir /s /b C:\\Users\\ayoub\\gsap-mcp 2>nul || echo Not found\")",
+      "Bash(cmd /c \"npm list -g --depth=0 2>nul | findstr gsap\")",
+      "Bash(dir /s /b:*)",
+      "Bash(cmd /c \"dir /s /b\")",
+      "Bash(cmd /c \"npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias @/* --eslint\")",
+      "Bash(cmd /c \"xcopy logo_ANA.svg public\\ /Y\")",
+      "Bash(cmd /c \"xcopy logo_ANA.png public\\ /Y\")",
+      "Bash(cmd /c \"copy logo_ANA.svg public\\logo_ANA.svg\")",
+      "Bash(cmd /c \"copy logo_ANA.png public\\logo_ANA.png\")",
+      "Bash(cmd /c \"if exist public\\logo_ANA.svg (echo Logo exists) else (echo Logo missing)\")",
+      "Bash(cmd /c \"type logo_ANA.svg > public\\logo_ANA.svg 2>&1\")",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && echo Cache cleared\")",
+      "Bash(cmd /c \"rmdir /s /q .next && echo .next deleted\")",
+      "Bash(cmd /c \"rmdir /s /q .next && npm run dev\")",
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && echo Cache cleared successfully\")",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && npm run dev\")",
+      "Bash(cmd /c \"npm list styled-jsx\")",
+      "Bash(cmd /c \"rmdir /s /q .next\")",
+      "Bash(cmd /c \"netstat -ano | findstr :3010\")",
+      "Bash(cmd /c \"for /f \"\"tokens=5\"\" %a in (''netstat -ano ^| findstr :3010'') do taskkill /F /PID %a\")",
+      "Bash(cmd /c \"for /L %p in (3001,1,3010) do (for /f \"\"tokens=5\"\" %a in (''netstat -ano ^| findstr :%p'') do taskkill /F /PID %a 2>nul)\")",
+      "Bash(cmd /c \"netstat -ano | findstr :3001\")",
+      "Bash(cmd /c \"taskkill /F /IM node.exe /T 2>nul & echo Killed all Node processes\")",
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && timeout /t 2 /nobreak >nul && npm run dev -- -p 3001\")",
+      "Bash(cmd /c \"taskkill /F /IM node.exe /T 2>nul && echo All Node processes killed\")",
+      "Bash(cmd /c \"rmdir /s /q .next 2>nul && rmdir /s /q node_modules\\.cache 2>nul && echo Caches cleared\")"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "jira",
+    "github",
+    "postgres",
+    "aws",
+    "figma",
+    "memory",
+    "sequential-thinking"
+  ]
+}
