@@ -1,17 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const stats = [
-  { value: 10000, suffix: '+', label: 'Active Freelancers' },
-  { value: 5000, suffix: '+', label: 'Companies Trust Us' },
-  { value: 98, suffix: '%', label: 'Success Rate' },
-  { value: 50, suffix: 'M+', label: 'Projects Delivered' },
-]
+import { useRef } from 'react'
+import { useLanguage } from '@/context/LanguageContext'
+import CountUp from './CountUp'
 
 interface StatsContentProps {
   isPreview?: boolean
@@ -19,74 +10,57 @@ interface StatsContentProps {
 
 export default function StatsContent({ isPreview = false }: StatsContentProps) {
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
 
-  useEffect(() => {
-    if (isPreview) return // Skip animations when used as preview
-
-    const section = sectionRef.current
-    if (!section) return
-
-    const statElements = section.querySelectorAll('.stat-value')
-
-    statElements.forEach((el, i) => {
-      const target = stats[i].value
-      const obj = { value: 0 }
-
-      gsap.to(obj, {
-        value: target,
-        duration: 2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-        },
-        onUpdate: () => {
-          ;(el as HTMLElement).textContent = Math.round(obj.value).toLocaleString()
-        },
-      })
-    })
-
-    // Parallax background
-    gsap.to('.stats-bg', {
-      y: -200,
-      scrollTrigger: {
-        trigger: section,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      },
-    })
-  }, [isPreview])
+  const stats = [
+    { value: 2500, suffix: '+', labelKey: 'stats.activePlayers', delay: 0 },
+    { value: 1200, suffix: '+', labelKey: 'stats.matchesPlayed', delay: 0.1 },
+    { value: 96, suffix: '%', labelKey: 'stats.successRate', delay: 0.2 },
+    { value: 45, suffix: '+', labelKey: 'stats.partnerCourts', delay: 0.3 },
+  ]
 
   return (
-    <section ref={sectionRef} className="relative py-40 overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen py-32 overflow-hidden flex items-center justify-center">
       {/* Animated background */}
-      <div className="stats-bg absolute inset-0 opacity-20">
+      <div className="stats-bg absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8">
-        <div className="text-center mb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
+        <div className="stats-title text-center mb-20">
           <h2 className="font-display text-6xl md:text-8xl font-black mb-6">
-            By The Numbers
+            {t('stats.title')}
           </h2>
           <p className="text-xl text-gray-400">
-            Trusted by thousands worldwide
+            {t('stats.subtitle')}
           </p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
           {stats.map((stat, index) => (
-            <div key={index} className="text-center group cursor-pointer" data-cursor-hover>
-              <div className="mb-4 transition-transform group-hover:scale-110 duration-300">
-                <span className="stat-value text-6xl md:text-7xl font-black inline-block">
-                  0
-                </span>
-                <span className="text-6xl md:text-7xl font-black">{stat.suffix}</span>
+            <div key={index} className="stat-item text-center group cursor-pointer" data-cursor-hover>
+              <div className="mb-4 transition-transform group-hover:scale-110 duration-300 flex items-baseline justify-center">
+                {isPreview ? (
+                  <span className="text-5xl md:text-7xl font-black">
+                    {stat.value.toLocaleString()}{stat.suffix}
+                  </span>
+                ) : (
+                  <>
+                    <CountUp
+                      from={0}
+                      to={stat.value}
+                      separator=","
+                      duration={2.5}
+                      delay={stat.delay}
+                      className="text-5xl md:text-7xl font-black"
+                    />
+                    <span className="text-5xl md:text-7xl font-black">{stat.suffix}</span>
+                  </>
+                )}
               </div>
               <p className="text-sm uppercase tracking-widest text-gray-400">
-                {stat.label}
+                {t(stat.labelKey)}
               </p>
             </div>
           ))}

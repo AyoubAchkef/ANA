@@ -3,46 +3,48 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLanguage } from '@/context/LanguageContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const features = [
-  {
-    number: '01',
-    title: 'Curated Talent',
-    description: 'Every freelancer is vetted through our rigorous selection process. Only the top 3% make it through.',
-    keywords: ['Expert', 'Verified', 'Elite'],
-  },
-  {
-    number: '02',
-    title: 'Seamless Matching',
-    description: 'Our AI-powered algorithm connects you with the perfect freelancer for your project in minutes.',
-    keywords: ['Fast', 'Intelligent', 'Precise'],
-  },
-  {
-    number: '03',
-    title: 'Secure Payments',
-    description: 'Built-in escrow system ensures both parties are protected throughout the entire project lifecycle.',
-    keywords: ['Safe', 'Transparent', 'Protected'],
-  },
-  {
-    number: '04',
-    title: 'Project Management',
-    description: 'Comprehensive tools to track progress, communicate, and deliver exceptional results.',
-    keywords: ['Organized', 'Efficient', 'Clear'],
-  },
-]
-
 export default function Features() {
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
+
+  const features = [
+    {
+      number: '01',
+      titleKey: 'features.smartMatching.title',
+      descriptionKey: 'features.smartMatching.description',
+      keywordsKey: 'features.smartMatching.keywords',
+    },
+    {
+      number: '02',
+      titleKey: 'features.groupFormation.title',
+      descriptionKey: 'features.groupFormation.description',
+      keywordsKey: 'features.groupFormation.keywords',
+    },
+    {
+      number: '03',
+      titleKey: 'features.courtBooking.title',
+      descriptionKey: 'features.courtBooking.description',
+      keywordsKey: 'features.courtBooking.keywords',
+    },
+    {
+      number: '04',
+      titleKey: 'features.matchOrganization.title',
+      descriptionKey: 'features.matchOrganization.description',
+      keywordsKey: 'features.matchOrganization.keywords',
+    },
+  ]
 
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
 
-    const features = section.querySelectorAll('.feature-card')
+    const featureCards = section.querySelectorAll('.feature-card')
 
-    features.forEach((feature, i) => {
+    featureCards.forEach((feature, i) => {
       gsap.from(feature, {
         scrollTrigger: {
           trigger: feature,
@@ -78,7 +80,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-24">
           <h2 className="font-display text-6xl md:text-8xl font-black mb-6">
-            Why Choose ANA
+            {t('features.title')}
           </h2>
           <div className="w-32 h-1 bg-white" />
         </div>
@@ -97,15 +99,15 @@ export default function Features() {
               </div>
 
               <h3 className="font-display text-4xl font-black mb-6 group-hover:translate-x-4 transition-transform duration-300">
-                {feature.title}
+                {t(feature.titleKey)}
               </h3>
 
               <p className="text-gray-400 text-lg leading-relaxed mb-8">
-                {feature.description}
+                {t(feature.descriptionKey)}
               </p>
 
-              <div className="flex gap-3">
-                {feature.keywords.map((keyword, i) => (
+              <div className="flex gap-3 flex-wrap">
+                {t(feature.keywordsKey).split(',').map((keyword, i) => (
                   <span
                     key={i}
                     className="feature-keyword px-4 py-2 border border-white/20 text-xs uppercase tracking-wider"

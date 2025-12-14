@@ -3,9 +3,11 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import Image from 'next/image'
+import { useLanguage } from '@/context/LanguageContext'
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const footer = footerRef.current
@@ -38,23 +40,27 @@ export default function Footer() {
               className="invert mb-6"
             />
             <p className="text-gray-400 max-w-md">
-              Connecting exceptional talent with visionary companies.
-              Transform your business with ANA.
+              {t('footer.description')}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h3 className="font-bold text-sm uppercase tracking-wider mb-6">Platform</h3>
+            <h3 className="font-bold text-sm uppercase tracking-wider mb-6">{t('footer.platform')}</h3>
             <ul className="space-y-3">
-              {['Find Talent', 'For Freelancers', 'Enterprise', 'Pricing'].map((link) => (
-                <li key={link}>
+              {[
+                { key: 'footer.findPlayers', href: '#players' },
+                { key: 'footer.bookCourts', href: '#courts' },
+                { key: 'footer.joinMatch', href: '#matches' },
+                { key: 'footer.rankings', href: '#rankings' },
+              ].map((link) => (
+                <li key={link.key}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-gray-400 hover:text-white transition-colors"
                     data-cursor-hover
                   >
-                    {link}
+                    {t(link.key)}
                   </a>
                 </li>
               ))}
@@ -62,16 +68,21 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-sm uppercase tracking-wider mb-6">Company</h3>
+            <h3 className="font-bold text-sm uppercase tracking-wider mb-6">{t('footer.company')}</h3>
             <ul className="space-y-3">
-              {['About', 'Blog', 'Careers', 'Contact'].map((link) => (
-                <li key={link}>
+              {[
+                { key: 'footer.about', href: '#about' },
+                { key: 'footer.blog', href: '#blog' },
+                { key: 'footer.careers', href: '#careers' },
+                { key: 'footer.contact', href: '#contact' },
+              ].map((link) => (
+                <li key={link.key}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-gray-400 hover:text-white transition-colors"
                     data-cursor-hover
                   >
-                    {link}
+                    {t(link.key)}
                   </a>
                 </li>
               ))}
@@ -82,18 +93,22 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-sm text-gray-400">
-            © 2024 ANA. All rights reserved.
+            © 2024 ANA. {t('footer.rights')}
           </p>
 
           <div className="flex gap-6">
-            {['Privacy', 'Terms', 'Cookies'].map((link) => (
+            {[
+              { key: 'footer.privacy', href: '#privacy' },
+              { key: 'footer.terms', href: '#terms' },
+              { key: 'footer.cookies', href: '#cookies' },
+            ].map((link) => (
               <a
-                key={link}
-                href="#"
+                key={link.key}
+                href={link.href}
                 className="text-sm text-gray-400 hover:text-white transition-colors"
                 data-cursor-hover
               >
-                {link}
+                {t(link.key)}
               </a>
             ))}
           </div>

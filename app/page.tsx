@@ -1,5 +1,4 @@
-import Hero from '@/components/Hero'
-import Stats from '@/components/Stats'
+import HeroStatsTransition from '@/components/HeroStatsTransition'
 import Features from '@/components/Features'
 import HorizontalScroll from '@/components/HorizontalScroll'
 import Testimonials from '@/components/Testimonials'
@@ -8,9 +7,8 @@ import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
-    <main className="relative">
-      <Hero />
-      <Stats />
+    <main className="relative bg-black">
+      <HeroStatsTransition />
       <Features />
       <HorizontalScroll />
       <Testimonials />

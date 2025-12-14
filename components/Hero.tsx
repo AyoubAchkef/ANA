@@ -1,74 +1,47 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import SplitType from 'split-type'
 import dynamic from 'next/dynamic'
 import Shuffle from './Shuffle'
 import PearlButton from './PearlButton'
-import StatsContent from './StatsContent'
+import TextType from './TextType'
+import { useLanguage } from '@/context/LanguageContext'
 
 const Silk = dynamic(() => import('./Silk'), { ssr: false })
 
-gsap.registerPlugin(ScrollTrigger)
-
 export default function Hero() {
-  const heroRef = useRef<HTMLElement>(null)
-  const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const circleRevealRef = useRef<HTMLDivElement>(null)
-  const [titleChars, setTitleChars] = useState<HTMLElement[]>([])
-  const charsCollectedRef = useRef(new Set<HTMLElement>())
+  const subtitleRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const { t, language } = useLanguage()
 
-  // Calculate 3D rotations for each letter based on position relative to center
-  const calculateRotations = (char: HTMLElement) => {
-    const rect = char.getBoundingClientRect()
-    const centerX = window.innerWidth / 2
-    const centerY = window.innerHeight / 2
-    const charCenterX = rect.left + rect.width / 2
-    const charCenterY = rect.top + rect.height / 2
+  // Memoize subtitle texts to prevent unnecessary re-renders
+  const subtitleTexts = useMemo(() => [
+    t('hero.subtitle1'),
+    t('hero.subtitle2'),
+    t('hero.subtitle3'),
+    t('hero.subtitle4'),
+  ], [t])
 
-    const deltaX = charCenterX - centerX
-    const deltaY = charCenterY - centerY
-    const angle = Math.atan2(deltaY, deltaX)
-
-    return {
-      rotateX: -deltaY * 0.5,
-      rotateY: deltaX * 0.5,
-      rotateZ: angle * (180 / Math.PI),
-    }
-  }
-
-  // Capture characters from Shuffle components (memoized to prevent re-renders)
-  const handleCharsReady = useCallback((chars: HTMLElement[]) => {
-    // Only add chars that haven't been collected yet
-    const newChars = chars.filter(char => !charsCollectedRef.current.has(char))
-
-    if (newChars.length > 0) {
-      newChars.forEach(char => charsCollectedRef.current.add(char))
-      setTitleChars((prev) => [...prev, ...newChars])
-    }
-  }, [])
-
-  // Initial entrance animations
+  // Initial entrance animations - scoped to this instance
   useEffect(() => {
     const subtitle = subtitleRef.current
-    if (!subtitle) return
+    const cta = ctaRef.current
 
-    // Split text animation for subtitle
-    const splitSubtitle = new SplitType(subtitle, { types: 'words' })
+    if (!subtitle || !cta) return
 
-    // Initial animation
+    // Set initial visible state
+    gsap.set([subtitle, cta], { opacity: 1, y: 0 })
+
     const tl = gsap.timeline({ delay: 1.5 })
 
-    tl.from(splitSubtitle.words, {
+    tl.from(subtitle, {
       opacity: 0,
-      y: 50,
-      stagger: 0.03,
+      y: 20,
       duration: 0.8,
       ease: 'power3.out',
     }).from(
-      '.hero-cta',
+      cta,
       {
         opacity: 0,
         y: 30,
@@ -78,118 +51,13 @@ export default function Hero() {
       '-=0.3'
     )
 
-    // Cleanup
     return () => {
-      splitSubtitle.revert()
       tl.kill()
     }
-  }, [])
-
-  // GPU acceleration for letters
-  useEffect(() => {
-    if (titleChars.length === 0) return
-
-    gsap.set(titleChars, {
-      force3D: true,
-      willChange: 'transform',
-      transformOrigin: 'center center',
-      transformPerspective: 1000,
-    })
-  }, [titleChars])
-
-  // Master scroll-driven transition timeline
-  useEffect(() => {
-    const hero = heroRef.current
-    const circleReveal = circleRevealRef.current
-    const subtitle = subtitleRef.current
-
-    if (!hero || !circleReveal || titleChars.length === 0) return
-
-    const masterTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: hero,
-        start: 'top top',
-        end: '+=100vh',
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-      },
-    })
-
-    // Phase 1: Reduced parallax (0-40%)
-    masterTimeline.to(
-      hero,
-      {
-        y: 120,
-        opacity: 0.7,
-        scale: 0.95,
-        duration: 0.4,
-        ease: 'none',
-      },
-      0
-    )
-
-    // Phase 2: Letters roll out in 3D (40-80%)
-    masterTimeline.to(
-      titleChars,
-      {
-        rotateX: (i, target) => calculateRotations(target).rotateX,
-        rotateY: (i, target) => calculateRotations(target).rotateY,
-        rotateZ: (i, target) => calculateRotations(target).rotateZ,
-        opacity: 0,
-        scale: 1.5,
-        z: -500,
-        duration: 0.4,
-        stagger: { each: 0.02, from: 'center' },
-        ease: 'power2.inOut',
-      },
-      0.4
-    )
-
-    // Phase 2.5: Fade buttons and subtitle (40-70%)
-    masterTimeline.to(
-      ['.hero-cta', subtitle],
-      {
-        opacity: 0,
-        y: -50,
-        duration: 0.3,
-        ease: 'power2.in',
-      },
-      0.4
-    )
-
-    // Phase 3: Circle reveal (60-100%)
-    masterTimeline.to(
-      circleReveal,
-      {
-        clipPath: 'circle(5% at 50% 50%)',
-        duration: 0.1,
-        ease: 'power2.out',
-      },
-      0.6
-    )
-
-    masterTimeline.to(
-      circleReveal,
-      {
-        clipPath: 'circle(100% at 50% 50%)',
-        duration: 0.3,
-        ease: 'power1.in',
-      },
-      0.7
-    )
-
-    // Cleanup
-    return () => {
-      masterTimeline.kill()
-      gsap.set(titleChars, { clearProps: 'all' })
-      gsap.set(circleReveal, { clearProps: 'all' })
-    }
-  }, [titleChars])
+  }, [language])
 
   return (
     <section
-      ref={heroRef}
       className="relative min-h-screen flex items-center justify-center px-8 overflow-hidden"
     >
       {/* Silk Background */}
@@ -213,9 +81,10 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 w-full mx-auto text-center">
-        <div className="mb-8 flex flex-col items-center w-full perspective-1000 preserve-3d">
+        <div className="mb-8 flex flex-col items-center w-full">
           <Shuffle
-            text="WHERE"
+            key={`title1-${language}`}
+            text={t('hero.title1')}
             tag="h1"
             className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-black leading-[0.9] tracking-tighter w-full"
             shuffleDirection="right"
@@ -230,10 +99,10 @@ export default function Hero() {
             respectReducedMotion={true}
             loop={true}
             loopDelay={5}
-            onCharsReady={handleCharsReady}
           />
           <Shuffle
-            text="TALENT"
+            key={`title2-${language}`}
+            text={t('hero.title2')}
             tag="h1"
             className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-black leading-[0.9] tracking-tighter w-full"
             shuffleDirection="right"
@@ -248,10 +117,10 @@ export default function Hero() {
             respectReducedMotion={true}
             loop={true}
             loopDelay={5}
-            onCharsReady={handleCharsReady}
           />
           <Shuffle
-            text="MEETS"
+            key={`title3-${language}`}
+            text={t('hero.title3')}
             tag="h1"
             className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-black leading-[0.9] tracking-tighter w-full"
             shuffleDirection="right"
@@ -266,10 +135,10 @@ export default function Hero() {
             respectReducedMotion={true}
             loop={true}
             loopDelay={5}
-            onCharsReady={handleCharsReady}
           />
           <Shuffle
-            text="VISION"
+            key={`title4-${language}`}
+            text={t('hero.title4')}
             tag="h1"
             className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[12rem] font-black leading-[0.9] tracking-tighter w-full"
             shuffleDirection="right"
@@ -284,37 +153,34 @@ export default function Hero() {
             respectReducedMotion={true}
             loop={true}
             loopDelay={5}
-            onCharsReady={handleCharsReady}
           />
         </div>
 
-        <p
-          ref={subtitleRef}
-          className="text-xl md:text-2xl max-w-3xl mx-auto mb-12 text-gray-300 leading-relaxed"
-        >
-          ANA connects forward-thinking companies with exceptional freelancers.
-          Transform your projects with elite talent.
-        </p>
-
-        <div className="hero-cta flex gap-6 justify-center items-center">
-          <PearlButton>
-            Find Talent
-          </PearlButton>
-
-          <PearlButton>
-            Join as Freelancer
-          </PearlButton>
+        <div ref={subtitleRef} className="hero-subtitle h-16 md:h-20 flex items-center justify-center max-w-3xl mx-auto mb-12">
+          <TextType
+            key={`subtitle-${language}`}
+            text={subtitleTexts}
+            as="p"
+            className="text-xl md:text-2xl text-gray-300 leading-relaxed"
+            typingSpeed={60}
+            deletingSpeed={25}
+            pauseDuration={2500}
+            initialDelay={1800}
+            showCursor={true}
+            cursorCharacter="|"
+            cursorClassName="text-white/60"
+            loop={true}
+          />
         </div>
-      </div>
 
-      {/* Circular reveal overlay */}
-      <div
-        ref={circleRevealRef}
-        className="fixed inset-0 pointer-events-none z-50"
-        style={{ clipPath: 'circle(0% at 50% 50%)' }}
-      >
-        <div className="w-full h-screen flex items-center justify-center">
-          <StatsContent isPreview={true} />
+        <div ref={ctaRef} className="hero-cta flex gap-6 justify-center items-center">
+          <PearlButton>
+            {t('hero.findPlayers')}
+          </PearlButton>
+
+          <PearlButton>
+            {t('hero.bookCourt')}
+          </PearlButton>
         </div>
       </div>
     </section>

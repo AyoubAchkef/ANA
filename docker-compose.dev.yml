@@ -1,0 +1,16 @@
+services:
+  ana-app:
+    container_name: ana-dev
+    image: node:20-alpine
+    working_dir: /app
+    ports:
+      - '3001:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm install && npm run dev"
+    tty: true

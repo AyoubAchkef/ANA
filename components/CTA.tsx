@@ -3,12 +3,14 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLanguage } from '@/context/LanguageContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null)
   const textRef = useRef<HTMLHeadingElement>(null)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const section = sectionRef.current
@@ -87,31 +89,28 @@ export default function CTA() {
           ref={textRef}
           className="font-display text-6xl md:text-9xl font-black mb-12 leading-none"
         >
-          Ready to Start
-          <br />
-          Your Journey?
+          {t('cta.title')}
         </h2>
 
         <p className="text-2xl mb-16 text-gray-600 max-w-2xl mx-auto">
-          Join thousands of companies and freelancers already transforming
-          the way they work.
+          {t('cta.subtitle')}
         </p>
 
         <button
           className="cta-button inline-flex items-center gap-4 px-16 py-8 bg-black text-white text-lg font-bold uppercase tracking-wider hover:gap-6 transition-all duration-300"
           data-cursor-hover
         >
-          Get Started Now
+          {t('cta.button')}
           <span className="text-2xl">→</span>
         </button>
 
         {/* Trust indicators */}
-        <div className="mt-20 flex justify-center gap-12 text-sm uppercase tracking-widest text-gray-400">
-          <div>No Credit Card Required</div>
-          <div className="w-px bg-gray-300" />
-          <div>Free 14-Day Trial</div>
-          <div className="w-px bg-gray-300" />
-          <div>Cancel Anytime</div>
+        <div className="mt-20 flex flex-wrap justify-center gap-6 md:gap-12 text-sm uppercase tracking-widest text-gray-400">
+          <div>{t('cta.noCard')}</div>
+          <div className="hidden md:block w-px bg-gray-300" />
+          <div>{t('cta.freeTrial')}</div>
+          <div className="hidden md:block w-px bg-gray-300" />
+          <div>{t('cta.cancel')}</div>
         </div>
       </div>
 

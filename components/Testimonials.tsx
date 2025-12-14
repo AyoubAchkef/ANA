@@ -3,32 +3,34 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLanguage } from '@/context/LanguageContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const testimonials = [
-  {
-    quote: "ANA transformed how we find talent. The quality of freelancers is unmatched.",
-    author: "Sarah Chen",
-    role: "CEO, TechVision Inc",
-    company: "Fortune 500"
-  },
-  {
-    quote: "In 48 hours, we had the perfect developer. The platform is a game-changer.",
-    author: "Marcus Rodriguez",
-    role: "CTO, StartupX",
-    company: "Series B Startup"
-  },
-  {
-    quote: "The caliber of professionals on ANA is exceptional. Worth every penny.",
-    author: "Emily Watson",
-    role: "Product Director, InnovateCo",
-    company: "Global Enterprise"
-  },
-]
-
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null)
+  const { t } = useLanguage()
+
+  const testimonials = [
+    {
+      quoteKey: 'testimonials.quote1',
+      authorKey: 'testimonials.author1',
+      roleKey: 'testimonials.role1',
+      locationKey: 'testimonials.location1',
+    },
+    {
+      quoteKey: 'testimonials.quote2',
+      authorKey: 'testimonials.author2',
+      roleKey: 'testimonials.role2',
+      locationKey: 'testimonials.location2',
+    },
+    {
+      quoteKey: 'testimonials.quote3',
+      authorKey: 'testimonials.author3',
+      roleKey: 'testimonials.role3',
+      locationKey: 'testimonials.location3',
+    },
+  ]
 
   useEffect(() => {
     const section = sectionRef.current
@@ -66,10 +68,10 @@ export default function Testimonials() {
       <div className="relative z-10 max-w-7xl mx-auto">
         <div className="text-center mb-24">
           <h2 className="font-display text-6xl md:text-8xl font-black mb-6">
-            Loved by Thousands
+            {t('testimonials.title')}
           </h2>
           <p className="text-xl text-gray-600">
-            See what our clients say about working with ANA
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -81,18 +83,18 @@ export default function Testimonials() {
               data-cursor-hover
             >
               <div className="text-6xl mb-8 opacity-20 group-hover:opacity-40 transition-opacity">
-                "
+                &ldquo;
               </div>
 
               <p className="text-xl mb-12 leading-relaxed">
-                {testimonial.quote}
+                {t(testimonial.quoteKey)}
               </p>
 
               <div>
-                <div className="font-bold text-lg mb-1">{testimonial.author}</div>
-                <div className="text-sm opacity-60 mb-1">{testimonial.role}</div>
+                <div className="font-bold text-lg mb-1">{t(testimonial.authorKey)}</div>
+                <div className="text-sm opacity-60 mb-1">{t(testimonial.roleKey)}</div>
                 <div className="text-xs uppercase tracking-wider opacity-40">
-                  {testimonial.company}
+                  {t(testimonial.locationKey)}
                 </div>
               </div>
             </div>

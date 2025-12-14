@@ -1,6 +1,7 @@
 {
   "name": "ana-platform",
   "version": "1.0.0",
+  "description": "ANA - Connect padel players, form groups, find opponents, and book courts",
   "private": true,
   "scripts": {
     "dev": "next dev",

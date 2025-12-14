@@ -34,7 +34,13 @@
       "Bash(cmd /c \"rmdir /s /q .next 2>nul && timeout /t 2 /nobreak >nul && npm run dev -- -p 3001\")",
       "Bash(cmd /c \"taskkill /F /IM node.exe /T 2>nul && echo All Node processes killed\")",
       "Bash(cmd /c \"rmdir /s /q .next 2>nul && rmdir /s /q node_modules\\.cache 2>nul && echo Caches cleared\")",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(docker-compose:*)",
+      "Bash(docker logs:*)",
+      "Bash(dir:*)",
+      "Bash(cat:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
